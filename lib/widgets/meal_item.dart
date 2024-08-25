@@ -5,7 +5,8 @@ import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
   final Meal meal;
-  const MealItem({super.key, required this.meal});
+  final void Function(Meal meal) onSelectMeal;
+  const MealItem({super.key, required this.meal, required this.onSelectMeal});
   String get affordabilityText {
     return meal.affordability.name[0].toUpperCase() +
         meal.affordability.name.substring(1);
@@ -77,7 +78,9 @@ class MealItem extends StatelessWidget {
             )
           ],
         ),
-        onTap: () {},
+        onTap: () {
+          onSelectMeal(meal);
+        },
       ),
     );
   }
