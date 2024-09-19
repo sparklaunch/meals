@@ -17,23 +17,35 @@ class _CategoriesScreenState extends State<CategoriesScreen>
   late AnimationController animationController;
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      padding: const EdgeInsets.all(24),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.5,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
+    return AnimatedBuilder(
+      animation: animationController,
+      child: GridView(
+        padding: const EdgeInsets.all(24),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.5,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+        children: [
+          for (final category in availableCategories)
+            CategoryGridItem(
+              category: category,
+              onSelectCategory: () {
+                _selectCategory(context, category);
+              },
+            )
+        ],
       ),
-      children: [
-        for (final category in availableCategories)
-          CategoryGridItem(
-            category: category,
-            onSelectCategory: () {
-              _selectCategory(context, category);
-            },
-          )
-      ],
+      builder: (context, child) => SlideTransition(
+        position: Tween(
+          begin: const Offset(0, 0.3),
+          end: const Offset(0, 0),
+        ).animate(
+          CurvedAnimation(parent: animationController, curve: Curves.easeInOut),
+        ),
+        child: child,
+      ),
     );
   }
 
@@ -49,6 +61,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    animationController.forward();
     super.initState();
   }
 
